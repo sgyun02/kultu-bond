@@ -5,24 +5,31 @@ import icons from "../../constants/icons";
 import { TouchableOpacity } from "react-native";
 import { logoutUser } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import useCurrentLocation from "../../components/location";
 //import IrishGrover from "../../assets/fonts/IrishGrover-Regular.ttf";
 
 const TabIcon = ({ IconComponent, color, name, focused }) => {
   return (
-    <View 
-    style={{ 
-      alignItems: 'center', 
-      justifyContent: 'center', 
-      gap: 2,
-      backgroundColor: focused ? '#727081' : '#FFFFFF',
-      borderRadius: 32,
-      height: focused ? 60 : 51,
-      width: focused ? 60 : 51,
-      borderWidth: 1,
-      borderColor: '#CDCDE0', }}>
-      <IconComponent width={24} height={24} fill={'#000000'} />
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 2,
+        backgroundColor: focused ? "#727081" : "#FFFFFF",
+        borderRadius: 32,
+        height: focused ? 60 : 51,
+        width: focused ? 60 : 51,
+        borderWidth: 1,
+        borderColor: "#CDCDE0",
+      }}
+    >
+      <IconComponent width={24} height={24} fill={"#000000"} />
       <Text
-        style={{ color: color, fontWeight: focused ? '600' : '400', fontSize: 10 }}
+        style={{
+          color: color,
+          fontWeight: focused ? "600" : "400",
+          fontSize: 10,
+        }}
       >
         {name}
       </Text>
@@ -67,13 +74,13 @@ const TabLayout = () => {
             height: 84,
             paddingTop: 16,
           },
-          headerStyle:{
+          headerStyle: {
             backgroundColor: "#14122D",
           },
-          headerTitleContainerStyle:{
+          headerTitleContainerStyle: {
             flex: 10, // Use flex: 1 to take the full width
-            alignItems: 'center', // Center horizontally
-            justifyContent: 'center', // Center vertically
+            alignItems: "center", // Center horizontally
+            justifyContent: "center", // Center vertically
             paddingTop: 10,
             paddingBottom: 10,
           },
@@ -83,9 +90,9 @@ const TabLayout = () => {
           },
           headerLeft: () => (
             <TouchableOpacity style={{ marginLeft: 10 }} onPress={handleLogout}>
-              <icons.logout width={24} height={24} stroke="#FFFFFF"/>
+              <icons.logout width={24} height={24} stroke="#FFFFFF" />
             </TouchableOpacity>
-          )
+          ),
         }}
       >
         <Tabs.Screen
@@ -163,6 +170,21 @@ const TabLayout = () => {
             ),
           }}
         />
+        {/* <Tabs.Screen
+          name="bingo"
+          options={{
+            title: "Profile",
+            headerShown: true,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                IconComponent={icons.profile}
+                color={color}
+                name="Profile"
+                focused={focused}
+              />
+            ),
+          }}
+        /> */}
       </Tabs>
 
       <StatusBar backgroundColor="#161622" style="light" />
