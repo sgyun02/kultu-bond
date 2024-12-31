@@ -8,10 +8,12 @@ import {
   Modal,
   Image,
   Dimensions,
+  RefreshControl, // Import RefreshControl
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { fetchUsers } from "../../lib/findFriends";
 import { styled } from "nativewind";
+import { Avatar } from "../../components/Avatar";
 import SecondaryButton from "../../components/SecondaryButton";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getCurrentUserTeams } from "../../lib/appwrite"; // Import function to check if user is in a team
@@ -35,6 +37,7 @@ const FindFriend = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isInTeam, setIsInTeam] = useState(false); // Track if the user is in a team
+  const [refreshing, setRefreshing] = useState(false); // State for refreshing
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -81,6 +84,16 @@ const FindFriend = () => {
     } else {
       navigation.navigate("team-register"); // Navigate to team-register page if user is not in a team
     }
+  };
+
+  // Function to refresh data
+  const onRefresh = async () => {
+    setRefreshing(true); // Set refreshing state to true
+    const usersData = await fetchUsers();
+    const filteredData = usersData.filter((u) => u.accountId !== user.$id);
+    setAllUsers(filteredData);
+    setFilteredUsers(filteredData);
+    setRefreshing(false); // Set refreshing state to false once done
   };
 
   const renderItem = ({ item }) => (
@@ -135,6 +148,9 @@ const FindFriend = () => {
         renderItem={renderItem}
         numColumns={2}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> // Add RefreshControl
+        }
         contentContainerStyle={{
           justifyContent: "center",
           alignItems: "center",
@@ -143,7 +159,6 @@ const FindFriend = () => {
         style={{ alignSelf: "center" }}
       />
 
-      {/* Avatar modal */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -151,7 +166,7 @@ const FindFriend = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         <StyledView className="flex-1 justify-center items-center bg-gray-800 bg-opacity-75">
-          <StyledView className="bg-white p-6 rounded-lg w-4/5">
+          <StyledView className="bg-white p-6 rounded-lg w-4/5 ">
             <TouchableOpacity
               className="absolute top-3 right-3"
               onPress={() => setModalVisible(false)}
@@ -160,10 +175,7 @@ const FindFriend = () => {
             </TouchableOpacity>
 
             <StyledView className="flex items-center mb-4">
-              <Image
-                source={{ uri: selectedUser?.avatar }}
-                className="w-20 h-20 rounded-full"
-              />
+              <Avatar url={selectedUser?.avatar} />
             </StyledView>
 
             {selectedUser && (
@@ -174,6 +186,18 @@ const FindFriend = () => {
                 <StyledText className="text-center text-gray-600 mb-4">
                   @{selectedUser.username}
                 </StyledText>
+                <StyledText className="mt-2">
+                  MBTI: {selectedUser.mbti}
+                </StyledText>
+                <StyledText className="mt-2">
+                  Country: {selectedUser.country}
+                </StyledText>
+                <StyledText className="mt-2">
+                  Introduction: {selectedUser.introduction}
+                </StyledText>
+                {/* <StyledText className="mt-2">
+                  Travel Preferences: {selectedUser.travel_preferences}
+                </StyledText> */}
               </>
             )}
           </StyledView>

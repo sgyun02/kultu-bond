@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Alert } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { createTeam, getUserAccountIdByEmail } from "../lib/appwrite"; // Import functions
 import { useGlobalContext } from "../context/GlobalProvider"; // To get logged-in user
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation hook
 
 const TeamRegister = () => {
   const { user } = useGlobalContext(); // Get current user from context
@@ -10,6 +11,7 @@ const TeamRegister = () => {
   const [numberOfMembers, setNumberOfMembers] = useState(1); // Default to 1 member
   const [memberEmails, setMemberEmails] = useState([""]); // Start with one email input
   const [loading, setLoading] = useState(false);
+  const navigation = useNavigation(); // Initialize navigation
 
   // Handle change of number of members
   const handleMemberChange = (value) => {
@@ -37,6 +39,9 @@ const TeamRegister = () => {
       await createTeam(teamName, user.$id, membersAccountIds);
 
       Alert.alert("Success", "Team registered successfully!");
+
+      // Redirect to "My Team" page after successful registration
+      navigation.navigate("my-team");
     } catch (error) {
       console.error("Error registering team:", error);
       Alert.alert("Error", error.message);
