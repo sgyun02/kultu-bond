@@ -10,7 +10,7 @@
 
 ---
 
-## 📄 Project Report
+## 📄 Presentation Slides
 
 You can view the final project report here:  
 [📕 Download Report (PDF)](./presentation.pdf)
